@@ -120,7 +120,8 @@ RCT_EXPORT_MODULE(InCallManager)
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[@"Proximity",
-             @"WiredHeadset"];
+             @"WiredHeadset",
+             @"USBAudio"];
 }
 
 RCT_EXPORT_METHOD(start:(NSString *)mediaType
@@ -820,6 +821,14 @@ RCT_EXPORT_METHOD(stopProximitySensor)
                                                @"isPlugged": @YES,
                                                @"hasMic": @NO,
                                                @"deviceName": AVAudioSessionPortHeadphones,
+                                           }];
+                    } else if ([self checkAudioRoute:@[AVAudioSessionPortUSBAudio]
+                                    routeType:@"input"]) {
+                        [self sendEventWithName:@"USBAudio"
+                                           body:@{
+                                               @"isPlugged": @YES,
+                                               @"hasMic": @YES,
+                                               @"deviceName": AVAudioSessionPortUSBAudio,
                                            }];
                     }
                     break;
