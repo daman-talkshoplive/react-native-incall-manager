@@ -523,7 +523,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
 {
     AVAudioSessionRouteDescription *currentRoute = _audioSession.currentRoute;
 
-    NSLog(@"------------------------> %@ ---> %@ ---> %@", targetPortTypeArray, routeType, currentRoute);
+    // NSLog(@"------------------------> %@ ---> %@ ---> %@", targetPortTypeArray, routeType, currentRoute);
     if (currentRoute != nil) {
         NSArray<AVAudioSessionPortDescription *> *routes = [routeType isEqualToString:@"input"]
             ? currentRoute.inputs
@@ -809,14 +809,14 @@ RCT_EXPORT_METHOD(stopProximitySensor)
                                                         block:^(NSNotification *notification) {
             if (notification.userInfo == nil
                     || ![notification.name isEqualToString:AVAudioSessionRouteChangeNotification]) {
-                    NSLog(@"================NULL========================%@", notification);
+                    // NSLog(@"================NULL========================%@", notification);
                 return;
             }
 
             NSNumber *routeChangeType = [notification.userInfo objectForKey:@"AVAudioSessionRouteChangeReasonKey"];
             NSUInteger routeChangeTypeValue = [routeChangeType unsignedIntegerValue];
 
-            NSLog(@"================NOT NULL========================%@", notification);
+            // NSLog(@"================NOT NULL========================%@", notification);
             switch (routeChangeTypeValue) {
                 case AVAudioSessionRouteChangeReasonUnknown:
                     NSLog(@"RNInCallManager.AudioRouteChange.Reason: Unknown");
