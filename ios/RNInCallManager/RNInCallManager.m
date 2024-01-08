@@ -438,6 +438,13 @@ RCT_EXPORT_METHOD(getIsWiredHeadsetPluggedIn:(RCTPromiseResolveBlock)resolve
     resolve(wiredHeadsetPluggedIn ? @YES : @NO);
 }
 
+RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
+                                      reject:(RCTPromiseRejectBlock)reject)
+{
+    BOOL builtInReceiverPluggedIn = [self isBuiltInReceiverPluggedIn];
+    resolve(builtInReceiverPluggedIn ? @YES : @NO);
+}
+
 - (void)updateAudioRoute
 {
     NSLog(@"RNInCallManager.updateAudioRoute(): [Enter] forceSpeakerOn flag=%d media=%@ category=%@ mode=%@", _forceSpeakerOn, _media, _audioSession.category, _audioSession.mode);
@@ -516,6 +523,7 @@ RCT_EXPORT_METHOD(getIsWiredHeadsetPluggedIn:(RCTPromiseResolveBlock)resolve
 {
     AVAudioSessionRouteDescription *currentRoute = _audioSession.currentRoute;
 
+    NSLog(@"------------------------> %@ ---> %@ ---> %@", targetPortTypeArray, routeType, currentRoute);
     if (currentRoute != nil) {
         NSArray<AVAudioSessionPortDescription *> *routes = [routeType isEqualToString:@"input"]
             ? currentRoute.inputs
@@ -588,6 +596,13 @@ RCT_EXPORT_METHOD(getIsWiredHeadsetPluggedIn:(RCTPromiseResolveBlock)resolve
                        routeType:@"output"]
         || [self checkAudioRoute:@[AVAudioSessionPortHeadsetMic]
                        routeType:@"input"];
+}
+
+- (BOOL)isBuiltInReceiverPluggedIn
+{
+    // ear-piece speaker
+    return [self checkAudioRoute:@[AVAudioSessionPortBuiltInReceiver]
+                       routeType:@"output"];
 }
 
 - (void)audioSessionSetCategory:(NSString *)audioCategory
@@ -794,12 +809,14 @@ RCT_EXPORT_METHOD(stopProximitySensor)
                                                         block:^(NSNotification *notification) {
             if (notification.userInfo == nil
                     || ![notification.name isEqualToString:AVAudioSessionRouteChangeNotification]) {
+                    NSLog(@"================NULL========================%@", notification);
                 return;
             }
 
             NSNumber *routeChangeType = [notification.userInfo objectForKey:@"AVAudioSessionRouteChangeReasonKey"];
             NSUInteger routeChangeTypeValue = [routeChangeType unsignedIntegerValue];
 
+            NSLog(@"================NOT NULL========================%@", notification);
             switch (routeChangeTypeValue) {
                 case AVAudioSessionRouteChangeReasonUnknown:
                     NSLog(@"RNInCallManager.AudioRouteChange.Reason: Unknown");
