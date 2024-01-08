@@ -42,6 +42,11 @@ class InCallManager {
         return { isWiredHeadsetPluggedIn: isPluggedIn };
     }
 
+    async getIsBuiltInReceiverPluggedIn() {
+        let isPluggedIn = await _InCallManager.getIsBuiltInReceiverPluggedIn();
+        return { isBuiltInReceiverPluggedIn: isPluggedIn };
+    }
+
     setFlashOn(enable, brightness) {
         if (Platform.OS === 'ios') {
             enable = (enable === true) ? true : false;
@@ -101,7 +106,7 @@ class InCallManager {
     startProximitySensor() {
         _InCallManager.startProximitySensor();
     }
-  
+
     stopProximitySensor() {
         _InCallManager.stopProximitySensor();
     }
