@@ -10,7 +10,7 @@ declare class InCallManager {
 
   start(setup?: {
     auto?: boolean;
-    media?: "video" | "audio";
+    media?: "default" | "video" | "audio";
     ringback?: string;
   }): void;
 

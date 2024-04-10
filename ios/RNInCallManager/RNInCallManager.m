@@ -134,7 +134,9 @@ RCT_EXPORT_METHOD(start:(NSString *)mediaType
     _media = mediaType;
 
     // --- auto is always true on ios
-    if ([_media isEqualToString:@"video"]) {
+    if ([_media isEqualToString:@"default"]) {
+        _incallAudioMode = AVAudioSessionModeDefault;
+    } else if ([_media isEqualToString:@"video"]) {
         _incallAudioMode = AVAudioSessionModeVideoChat;
     } else {
         _incallAudioMode = AVAudioSessionModeVoiceChat;
@@ -463,7 +465,10 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
         // --- force ON, override speaker only, keep audio mode remain.
         overrideAudioPort = AVAudioSessionPortOverrideSpeaker;
         overrideAudioPortString = @".Speaker";
-        if ([_media isEqualToString:@"video"]) {
+        if ([_media isEqualToString:@"default"]) {
+            audioMode = AVAudioSessionModeDefault;
+            [self stopProximitySensor];
+        } else if ([_media isEqualToString:@"video"]) {
             audioMode = AVAudioSessionModeVideoChat;
             [self stopProximitySensor];
         }
@@ -471,14 +476,20 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
         // --- force off
         overrideAudioPort = AVAudioSessionPortOverrideNone;
         overrideAudioPortString = @".None";
-        if ([_media isEqualToString:@"video"]) {
+        if ([_media isEqualToString:@"default"]) {
+            audioMode = AVAudioSessionModeDefault;
+            [self startProximitySensor];
+        } else if ([_media isEqualToString:@"video"]) {
             audioMode = AVAudioSessionModeVoiceChat;
             [self startProximitySensor];
         }
     } else { // use default behavior
         overrideAudioPort = AVAudioSessionPortOverrideNone;
         overrideAudioPortString = @".None";
-        if ([_media isEqualToString:@"video"]) {
+        if ([_media isEqualToString:@"default"]) {
+            audioMode = AVAudioSessionModeDefault;
+            [self stopProximitySensor];
+        } else if ([_media isEqualToString:@"video"]) {
             audioMode = AVAudioSessionModeVideoChat;
             [self stopProximitySensor];
         }
@@ -611,12 +622,16 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
 {
     @try {
         if (options != 0) {
+            NSLog(@"RNInCallManager: audioSession.setCategory not null");
             [_audioSession setCategory:audioCategory
                            withOptions:options
                                  error:nil];
         } else {
+            NSLog(@"RNInCallManager: audioSession.setCategory with default options");
+            // Support bluetooth by default
             [_audioSession setCategory:audioCategory
-                                 error:nil];
+                            withOptions:AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay
+                                  error:nil];
         }
         NSLog(@"RNInCallManager.%@: audioSession.setCategory: %@, withOptions: %lu success", callerMemo, audioCategory, (unsigned long)options);
     } @catch (NSException *e) {

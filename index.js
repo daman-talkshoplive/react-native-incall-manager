@@ -18,7 +18,7 @@ class InCallManager {
     start(setup) {
         setup = (setup === undefined) ? {} : setup;
         let auto = (setup.auto === false) ? false : true;
-        let media = (setup.media === 'video') ? 'video' : 'audio';
+        let media = setup.media || 'video';
         let ringback = (!!setup.ringback) ? (typeof setup.ringback === 'string') ? setup.ringback : "" : "";
         _InCallManager.start(media, auto, ringback);
     }
