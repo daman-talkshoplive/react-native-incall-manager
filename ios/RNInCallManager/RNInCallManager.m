@@ -512,7 +512,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
 
     if (![_audioSession.category isEqualToString:_incallAudioCategory]) {
         [self audioSessionSetCategory:_incallAudioCategory
-                              options:0
+                              options:AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay
                            callerMemo:NSStringFromSelector(_cmd)];
         NSLog(@"RNInCallManager.updateAudioRoute() audio category has changed to %@", _incallAudioCategory);
     } else {
@@ -630,7 +630,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
             NSLog(@"RNInCallManager: audioSession.setCategory with default options");
             // Support bluetooth by default
             [_audioSession setCategory:audioCategory
-                            withOptions:AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay
+                            withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay
                                   error:nil];
         }
         NSLog(@"RNInCallManager.%@: audioSession.setCategory: %@, withOptions: %lu success", callerMemo, audioCategory, (unsigned long)options);
