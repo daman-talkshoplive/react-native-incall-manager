@@ -167,6 +167,19 @@ RCT_EXPORT_METHOD(start:(NSString *)mediaType
     //self.debugAudioSession()
 }
 
+RCT_EXPORT_METHOD(chooseMediaType:(NSString *)mediaType)
+{
+    _media = mediaType;
+    if ([_media isEqualToString:@"default"]) {
+        _incallAudioMode = AVAudioSessionModeDefault;
+    } else {
+        _incallAudioMode = AVAudioSessionModeVideoChat;
+    }
+    NSLog(@"RNInCallManager.chooseMediaType media=%@, type=%@, mode=%@", _media, _media, _incallAudioMode);
+    [self audioSessionSetMode:_incallAudioMode
+                   callerMemo:NSStringFromSelector(_cmd)];
+}
+
 RCT_EXPORT_METHOD(stop:(NSString *)busytoneUriType)
 {
     if (!_audioSessionInitialized) {
@@ -512,7 +525,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
 
     if (![_audioSession.category isEqualToString:_incallAudioCategory]) {
         [self audioSessionSetCategory:_incallAudioCategory
-                              options:AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay
+                              options:0
                            callerMemo:NSStringFromSelector(_cmd)];
         NSLog(@"RNInCallManager.updateAudioRoute() audio category has changed to %@", _incallAudioCategory);
     } else {
@@ -630,7 +643,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
             NSLog(@"RNInCallManager: audioSession.setCategory with default options");
             // Support bluetooth by default
             [_audioSession setCategory:audioCategory
-                            withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay
+                            withOptions:AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionAllowAirPlay | AVAudioSessionCategoryOptionMixWithOthers | AVAudioSessionCategoryOptionDefaultToSpeaker
                                   error:nil];
         }
         NSLog(@"RNInCallManager.%@: audioSession.setCategory: %@, withOptions: %lu success", callerMemo, audioCategory, (unsigned long)options);
