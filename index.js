@@ -23,6 +23,10 @@ class InCallManager {
         _InCallManager.start(media, auto, ringback);
     }
 
+    chooseMediaType(media) {
+        _InCallManager.chooseMediaType(media);
+    }
+
     stop(setup) {
         setup = (setup === undefined) ? {} : setup;
         let busytone = (!!setup.busytone) ? (typeof setup.busytone === 'string') ? setup.busytone : "" : "";
