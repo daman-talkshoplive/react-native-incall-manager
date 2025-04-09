@@ -135,7 +135,7 @@ RCT_EXPORT_METHOD(start:(NSString *)mediaType
 
     // --- auto is always true on ios
     if ([_media isEqualToString:@"default"]) {
-        _incallAudioMode = AVAudioSessionModeDefault;
+        _incallAudioMode = AVAudioSessionModeVideoRecording;
     } else if ([_media isEqualToString:@"video"]) {
         _incallAudioMode = AVAudioSessionModeVideoChat;
     } else {
@@ -171,7 +171,7 @@ RCT_EXPORT_METHOD(chooseMediaType:(NSString *)mediaType)
 {
     _media = mediaType;
     if ([_media isEqualToString:@"default"]) {
-        _incallAudioMode = AVAudioSessionModeDefault;
+        _incallAudioMode = AVAudioSessionModeVideoRecording;
     } else {
         _incallAudioMode = AVAudioSessionModeVideoChat;
     }
@@ -400,7 +400,7 @@ RCT_EXPORT_METHOD(startRingtone:(NSString *)ringtoneUriType
                                   options:0
                                callerMemo:NSStringFromSelector(_cmd)];
         }
-        [self audioSessionSetMode:AVAudioSessionModeDefault
+        [self audioSessionSetMode:AVAudioSessionModeVideoRecording
                        callerMemo:NSStringFromSelector(_cmd)];
         //[self audioSessionSetActive:YES
         //                    options:nil
@@ -479,7 +479,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
         overrideAudioPort = AVAudioSessionPortOverrideSpeaker;
         overrideAudioPortString = @".Speaker";
         if ([_media isEqualToString:@"default"]) {
-            audioMode = AVAudioSessionModeDefault;
+            audioMode = AVAudioSessionModeVideoRecording;
             [self stopProximitySensor];
         } else if ([_media isEqualToString:@"video"]) {
             audioMode = AVAudioSessionModeVideoChat;
@@ -490,7 +490,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
         overrideAudioPort = AVAudioSessionPortOverrideNone;
         overrideAudioPortString = @".None";
         if ([_media isEqualToString:@"default"]) {
-            audioMode = AVAudioSessionModeDefault;
+            audioMode = AVAudioSessionModeVideoRecording;
             [self startProximitySensor];
         } else if ([_media isEqualToString:@"video"]) {
             audioMode = AVAudioSessionModeVoiceChat;
@@ -500,7 +500,7 @@ RCT_EXPORT_METHOD(getIsBuiltInReceiverPluggedIn:(RCTPromiseResolveBlock)resolve
         overrideAudioPort = AVAudioSessionPortOverrideNone;
         overrideAudioPortString = @".None";
         if ([_media isEqualToString:@"default"]) {
-            audioMode = AVAudioSessionModeDefault;
+            audioMode = AVAudioSessionModeVideoRecording;
             [self stopProximitySensor];
         } else if ([_media isEqualToString:@"video"]) {
             audioMode = AVAudioSessionModeVideoChat;
